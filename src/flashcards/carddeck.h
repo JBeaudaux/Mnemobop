@@ -1,5 +1,7 @@
 
-#include "common.h"
+#include "../common/common.h"
+
+#include <time.h>
 
 
 #define TESTMODE_ATOB 0

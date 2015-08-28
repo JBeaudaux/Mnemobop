@@ -1,20 +1,29 @@
-sources=mnemobop.cpp
-sources+=common.cpp
-sources+=carddeck.cpp
-headers=common.h
+sources=./src/mnemobop.cpp
+sources+=./src/common/common.cpp
+sources+=./src/flashcards/carddeck.cpp
+
+headers=./src/common/common.h
+
 objects=$(sources:.cpp=.o)
 
+modules	:= ./src
+modules	+= ./src/common
+modules	+= ./src/flashcards
+
+CC=g++
+CFLAGS=-I.
+
 mnemobop: $(objects)
-	g++ -o $@ $^
+	$(CC) -o $@ $^
 
-mnemobop.o: mnemobop.cpp
-	g++ -Wall -c $^
+mnemobop.o: ./src/mnemobop.cpp
+	$(CC) -Wall -c $^
 
-common.o: common.cpp
-	g++ -Wall -c $^
+common.o: ./src/common/common.cpp
+	$(CC) -Wall -c $^
 
 clean:
 	rm -f *.o
 
 mrproper:
-	rm -f Mnemobop
+	rm -f mnemobop

@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <string>
+#include <cstring>
 #include <sstream>
 
 #include <iostream>
@@ -10,7 +11,9 @@
 
 #include <stdlib.h>
 
+
 using namespace std;
+
 
 #define NORMAL    "\x1B[0m"
 #define RED       "\x1B[31m"

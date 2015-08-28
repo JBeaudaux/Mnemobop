@@ -1,7 +1,4 @@
 #include "carddeck.h"
-#include "common.h"
-
-#include <time.h>
 
 CardDeck::CardDeck(std::vector<std::string> myDeck)
 {
@@ -10,7 +7,7 @@ CardDeck::CardDeck(std::vector<std::string> myDeck)
 
 CardDeck::CardDeck()
 {
-	printf("Void constructor\n");
+	//Nothing to do here
 }
 
 void CardDeck::addCard(std::string myWordIn, std::string myWordOut)
@@ -22,8 +19,8 @@ void CardDeck::addCard(std::string myWordIn, std::string myWordOut)
 
 	wordlistIn.push_back(myWord);
 
-	printf(""YELLOW"New flash-card word (%ld): In %s , Out %s"NORMAL"\n", wordlistIn.size(),
-		wordlistIn[wordlistIn.size()-1][0].c_str(), wordlistIn[wordlistIn.size()-1][1].c_str());
+	//printf(""YELLOW"New flash-card word (%ld): In %s , Out %s"NORMAL"\n", wordlistIn.size(),
+	//	wordlistIn[wordlistIn.size()-1][0].c_str(), wordlistIn[wordlistIn.size()-1][1].c_str());
 }
 
 void CardDeck::displayDeck(void)

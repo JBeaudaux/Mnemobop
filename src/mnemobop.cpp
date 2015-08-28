@@ -1,7 +1,7 @@
-#include "common.h"
+#include "common/common.h"
 #include "mnemobop_def.h"
 
-#include "carddeck.h"
+#include "flashcards/carddeck.h"
 
 
 /**
@@ -129,10 +129,37 @@ bool _fillFlashCard(const char* myDeckFile, CardDeck& myCardDeck)
 }
 
 
-int main(void)
+int main(int argc, char* argv[])
 {
     CardDeck cards;
     std::string filename;
+
+    int operationMode = TESTMODE_BOTH;
+
+    if(argc > 2)
+    {
+        printf(""RED"USAGE: %s OPMODE "NORMAL"\n", argv[0]);
+        return -1;
+    }
+
+    if(argc == 2)
+    {
+        if(strcmp(argv[1], "AtoB") == 0)
+        {
+            operationMode = TESTMODE_ATOB;
+        }
+        else if(strcmp(argv[1], "BtoA") == 0)
+        {
+            operationMode = TESTMODE_BTOA;
+        }
+        else
+        {
+            printf(""RED"USAGE: %s OPMODE "NORMAL"\n", argv[0]);
+            return -1;
+        }
+    }
+
+    std::cout << argv[1] << std::endl;
 
     filename = _listSelection();
 
@@ -142,7 +169,7 @@ int main(void)
 
         //cards.displayDeck();
 
-        cards.flashcardTestRetry(TESTMODE_BOTH);
+        cards.flashcardTestRetry(operationMode);
     }
 
     return 0;
