@@ -40,9 +40,12 @@ void CardDeck::displayDeck(void)
 
 
 /**
- * @brief Randomly selects words in the deck to translate (both A->B and B->A) 
+ * @brief Randomly selects words in the deck to translate. 
+ * 	      If correctly answered, a word is removed from the deck.
+ *
+ * @param mode Determines the use mode (A->B , B->A or both)
  */
-void CardDeck::defaultFlashcardTest(void)
+void CardDeck::flashcardTestDefault(int mode)//(int mode)
 {
 	int mistakes = 0;
 	int randomNmb, randomWay;
@@ -53,22 +56,74 @@ void CardDeck::defaultFlashcardTest(void)
 	while(wordlistIn.size() > 0)
 	{
 		randomNmb = rand() % wordlistIn.size();
-		randomWay = rand() % 2;
 
-		printf("What is the translation for : %s\n", wordlistIn[randomNmb][randomWay].c_str());
+		if(mode == TESTMODE_ATOB || TESTMODE_BTOA)
+		{
+			randomWay = mode;
+		}
+		else
+		{
+			randomWay = rand() % 2;
+		}
+
+		printf(""BLUE"What is the translation for : %s"NORMAL"\n", wordlistIn[randomNmb][randomWay].c_str());
 
 		cin >> givenWord;
 		if(givenWord == wordlistIn[randomNmb][!randomWay])
 		{
 			wordlistIn.erase(wordlistIn.begin() + randomNmb);
-			printf("Correct :-D\n\n");
+			printf(""GREEN"Correct :-D"NORMAL"\n\n");
 		}
 		else
 		{
 			mistakes+=1;
-			printf("Incorrect :'(\n");
+			printf(""RED"Incorrect :'("NORMAL"\n");
 		}
 	}
 
-	printf("Congratulations, you have completed this deck! You made %d mistakes\n", mistakes);
+	printf(""GREEN"Congratulations, you have completed this deck! You made %d mistakes"NORMAL"\n", mistakes);
+}
+
+/**
+ * @brief Randomly selects words in the deck to translate (both A->B and B->A). 
+ * 	      If correctly answered, a word is removed from the deck. Otherwise, a word duplicate is added to the deck.
+ *
+ * @param mode Determines the use mode (A->B , B->A or both)
+ */
+void CardDeck::flashcardTestRetry(int mode)
+{
+	int mistakes = 0;
+	int randomNmb, randomWay;
+	std::string givenWord;
+
+	std::vector<string> myWord;
+
+	srand(time(NULL));
+
+	while(wordlistIn.size() > 0)
+	{
+		randomNmb = rand() % wordlistIn.size();
+		randomWay = rand() % 2;
+
+		printf(""BLUE"What is the translation for : %s"NORMAL"\n", wordlistIn[randomNmb][randomWay].c_str());
+
+		cin >> givenWord;
+		if(givenWord == wordlistIn[randomNmb][!randomWay])
+		{
+			wordlistIn.erase(wordlistIn.begin() + randomNmb);
+			printf(""GREEN"Correct :-D"NORMAL"\n\n");
+		}
+		else
+		{
+			mistakes+=1;
+	
+			myWord.push_back(wordlistIn[randomNmb][0]);
+			myWord.push_back(wordlistIn[randomNmb][1]);
+			wordlistIn.push_back(myWord);
+
+			printf(""RED"Incorrect :'("NORMAL"\n");
+		}
+	}
+
+	printf(""GREEN"Congratulations, you have completed this deck! You made %d mistakes"NORMAL"\n", mistakes);
 }

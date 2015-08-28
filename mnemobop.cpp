@@ -140,9 +140,9 @@ int main(void)
     {
         _fillFlashCard(filename.c_str(), cards);
 
-        cards.displayDeck();
+        //cards.displayDeck();
 
-        cards.defaultFlashcardTest();
+        cards.flashcardTestRetry(TESTMODE_BOTH);
     }
 
     return 0;
