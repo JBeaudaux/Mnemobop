@@ -5,13 +5,14 @@
 
 
 /**
- * @brief Lists the flash-cards packets, and open the selected one
- * @return true if the file containing flash-cards was successfully opened
- * @return false otherwise
+ * @brief Lists the flash-cards packets, and request one to load
+ * @return a string containing the requested filename if successfull
+ * @return an empty string otherwise
  */
-static bool _listSelection(void)
+std::string _listSelection(void)
 {
-    unsigned int i;
+    unsigned int i, iter = 0;
+
     DIR *dir;
     struct dirent *ent;
     std::string filename;
@@ -34,6 +35,12 @@ static bool _listSelection(void)
         }
         closedir (dir);
 
+        if(availableLists.size() == 0)
+        {
+            printf(""RED"No available flash-card list"NORMAL"\n");
+            return "";
+        }
+
         for(i=0; i<availableLists.size(); i++)
         {
             printf(""YELLOW"\t%d) %s"NORMAL"\n", i+1, availableLists[i].c_str());
@@ -43,17 +50,25 @@ static bool _listSelection(void)
         {
             cin >> i;
 
+            //3 attemps before error
+            if(iter++ >= 3)
+            {
+                printf(""RED"Failed to load a list"NORMAL"\n");
+
+                return "";
+            }
+
             if(i>availableLists.size() || i<=0)
             {
                 printf(""RED"Bad file ID entered : %d "NORMAL"\n", i);
             }
             else
             {
-                _fillFlashCard(availableLists[i-1].c_str());
+                return availableLists[i-1];
+                //_fillFlashCard(availableLists[i-1].c_str());
             }
         }while(i>availableLists.size() || i<=0);
 
-        return true;
     }
     else
     {
@@ -61,11 +76,18 @@ static bool _listSelection(void)
         perror(""RED"The following error occurred : "NORMAL"");
         //printf(""RED"ERROR: Failed to open lists directory%s "NORMAL"\n", availableLists[i-1].c_str());
 
-        return false;
+        return "";
     }
+
+    return "";
 }
 
-static bool _fillFlashCard(const char* myDeckFile)
+/**
+ * @brief From a given file, extracts the information to import a new flash-card deck.
+ * @return true if the new flash-card deck was successfully filled
+ * @return false otherwise
+ */
+bool _fillFlashCard(const char* myDeckFile, CardDeck& myCardDeck)
 {
     std::string myline;
     std::ifstream infile;
@@ -90,8 +112,7 @@ static bool _fillFlashCard(const char* myDeckFile)
             else
             {
                 /// Fill here FlashDeck filler
-
-                printf(""YELLOW"New flash-card : In %s , Out %s"NORMAL"\n", sublines[0].c_str(), sublines[1].c_str());
+                myCardDeck.addCard(sublines[0], sublines[1]);
             }
         }
 
@@ -110,8 +131,19 @@ static bool _fillFlashCard(const char* myDeckFile)
 
 int main(void)
 {
-    //CardDeck foo();
-    _listSelection();
+    CardDeck cards;
+    std::string filename;
+
+    filename = _listSelection();
+
+    if(filename != "")
+    {
+        _fillFlashCard(filename.c_str(), cards);
+
+        cards.displayDeck();
+
+        cards.defaultFlashcardTest();
+    }
 
     return 0;
 }

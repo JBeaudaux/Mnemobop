@@ -8,6 +8,8 @@
 
 #include <dirent.h>
 
+#include <stdlib.h>
+
 using namespace std;
 
 #define NORMAL    "\x1B[0m"

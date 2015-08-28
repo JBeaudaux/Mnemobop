@@ -1,9 +1,10 @@
 sources=mnemobop.cpp
 sources+=common.cpp
+sources+=carddeck.cpp
 headers=common.h
 objects=$(sources:.cpp=.o)
 
-mnemobop: mnemobop.o common.o
+mnemobop: $(objects)
 	g++ -o $@ $^
 
 mnemobop.o: mnemobop.cpp
