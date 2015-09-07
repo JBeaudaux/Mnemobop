@@ -10,16 +10,20 @@
 
 class CardDeck
 {
-	std::vector<std::vector<string> > wordlistIn;
-
 	public:
-		//Constructors
 		CardDeck(std::vector<string>);
 		CardDeck(void);
 
-		//Other methods
-		void addCard(std::string myWordIn, std::string myWordOut);
+		int importDeck(const char* myDeckFile);
+
 		void displayDeck(void);
-		void flashcardTestDefault(int mode);
-		void flashcardTestRetry(int mode);
+		void flashcardTestDefault(void);
+		void flashcardTestRetry(void);
+		int changeOperationMode(int mode);
+
+	private:
+		int operationMode;
+		std::vector<std::vector<string> > wordlistIn;
+
+		void _addCard(std::string myWordIn, std::string myWordOut);
 };

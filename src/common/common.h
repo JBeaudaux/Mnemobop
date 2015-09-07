@@ -28,6 +28,10 @@ using namespace std;
 #define REDBOLD   "\033[31m"
 
 
+
+#define PATH_TO_LISTS "lists/"
+
+
 std::vector<std::string> mySplit(const std::string &s, char delim, std::vector<std::string> &elems);
 
 std::vector<std::string> splitString(const std::string &s, char delim);

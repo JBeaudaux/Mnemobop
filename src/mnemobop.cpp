@@ -2,6 +2,7 @@
 #include "mnemobop_def.h"
 
 #include "flashcards/carddeck.h"
+#include "graphics/graphics.h"
 
 
 /**
@@ -9,7 +10,7 @@
  * @return a string containing the requested filename if successfull
  * @return an empty string otherwise
  */
-std::string _listSelection(void)
+/*std::string _listSelection(void)
 {
     unsigned int i, iter = 0;
 
@@ -80,14 +81,14 @@ std::string _listSelection(void)
     }
 
     return "";
-}
+}*/
 
 /**
  * @brief From a given file, extracts the information to import a new flash-card deck.
  * @return true if the new flash-card deck was successfully filled
  * @return false otherwise
  */
-bool _fillFlashCard(const char* myDeckFile, CardDeck& myCardDeck)
+/*bool _fillFlashCard(const char* myDeckFile, CardDeck& myCardDeck)
 {
     std::string myline;
     std::ifstream infile;
@@ -126,51 +127,24 @@ bool _fillFlashCard(const char* myDeckFile, CardDeck& myCardDeck)
     infile.close();
 
     return true;
-}
+}*/
 
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     CardDeck cards;
-    std::string filename;
+    Graphics myGUI;
 
-    int operationMode = TESTMODE_BOTH;
-
-    if(argc > 2)
+    if(argc > 1)
     {
-        printf(""RED"USAGE: %s OPMODE "NORMAL"\n", argv[0]);
+        printf(""RED"USAGE: %s "NORMAL"\n", argv[0]);
         return -1;
     }
 
-    if(argc == 2)
-    {
-        if(strcmp(argv[1], "AtoB") == 0)
-        {
-            operationMode = TESTMODE_ATOB;
-        }
-        else if(strcmp(argv[1], "BtoA") == 0)
-        {
-            operationMode = TESTMODE_BTOA;
-        }
-        else
-        {
-            printf(""RED"USAGE: %s OPMODE "NORMAL"\n", argv[0]);
-            return -1;
-        }
-    }
+    cards.importDeck("lists/TestList.data");
+    cards.displayDeck();
 
-    std::cout << argv[1] << std::endl;
-
-    filename = _listSelection();
-
-    if(filename != "")
-    {
-        _fillFlashCard(filename.c_str(), cards);
-
-        //cards.displayDeck();
-
-        cards.flashcardTestRetry(operationMode);
-    }
+    myGUI.initGraphics(argc, argv);
 
     return 0;
 }

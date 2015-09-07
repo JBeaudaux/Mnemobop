@@ -1,6 +1,7 @@
 sources=./src/mnemobop.cpp
 sources+=./src/common/common.cpp
 sources+=./src/flashcards/carddeck.cpp
+sources+=./src/graphics/graphics.cpp
 
 headers=./src/common/common.h
 
@@ -11,16 +12,26 @@ modules	+= ./src/common
 modules	+= ./src/flashcards
 
 CC=g++
-CFLAGS=-I.
+CPPFLAGS = -I.
+CPPFLAGS += -I/usr/include/gtk-3.0/
+CPPFLAGS += -I/usr/include/glib-2.0
+CPPFLAGS += `pkg-config --libs --cflags gtk+-3.0`
+CPPFLAGS += -Wall
+
+LIBS = `pkg-config --libs --cflags gtk+-3.0`
+
 
 mnemobop: $(objects)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(LIBS)
 
 mnemobop.o: ./src/mnemobop.cpp
-	$(CC) -Wall -c $^
+	$(CC) -c $^
 
 common.o: ./src/common/common.cpp
-	$(CC) -Wall -c $^
+	$(CC) -c $^
+
+graphics.o: ./src/graphics/graphics.cpp
+	$(CC) -c $^
 
 clean:
 	rm -f *.o

@@ -2,27 +2,83 @@
 
 CardDeck::CardDeck(std::vector<std::string> myDeck)
 {
-	printf("String vector constructor\n");
+	CardDeck::operationMode = TESTMODE_BOTH;
 }
 
 CardDeck::CardDeck()
 {
-	//Nothing to do here
+	CardDeck::operationMode = TESTMODE_BOTH;
 }
 
-void CardDeck::addCard(std::string myWordIn, std::string myWordOut)
+/**
+ * @brief Randomly selects words in the deck to translate.
+ * 	      If correctly answered, a word is removed from the deck.
+ *
+ * @param myDeckFile Name of the file containing the words list to import.
+ *
+ * @return -1 if imort was unsuccessful, the number of imported words otherwise
+ */
+int CardDeck::importDeck(const char* myDeckFile)
+{
+	std::string myline;
+	std::ifstream infile;
+	vector<std::string> sublines;
+	int resLines = 0; //Number of lines
+
+	infile.open(myDeckFile);
+
+	if(infile.is_open() == true)
+	{
+		printf(""GREEN"List opened : %s "NORMAL"\n", myDeckFile);
+
+		while(getline(infile, myline))
+		{
+			resLines += 1;
+
+			sublines = splitString(myline, ' ');
+			if(sublines.size() != 2)
+			{
+				printf(""RED"Incorrect flash-card list format"NORMAL"\n");
+
+				infile.close();
+				return false;
+			}
+			else
+			{
+				/// Fill here FlashDeck filler
+				CardDeck::_addCard(sublines[0], sublines[1]);
+			}
+		}
+
+		printf(""GREEN"New flash-card deck successfully imported"NORMAL"\n");
+	}
+	else
+	{
+		printf(""RED"Failed to open list : %s "NORMAL"\n", myDeckFile);
+		infile.close();
+
+		return -1;
+	}
+
+	return resLines;
+}
+
+void CardDeck::_addCard(std::string myWordIn, std::string myWordOut)
 {
 	std::vector<string> myWord;
-	
+
 	myWord.push_back(myWordIn);
 	myWord.push_back(myWordOut);
 
 	wordlistIn.push_back(myWord);
 
-	//printf(""YELLOW"New flash-card word (%ld): In %s , Out %s"NORMAL"\n", wordlistIn.size(),
-	//	wordlistIn[wordlistIn.size()-1][0].c_str(), wordlistIn[wordlistIn.size()-1][1].c_str());
+	printf(""YELLOW"New flash-card word added (%ld)"NORMAL"\n", wordlistIn.size());
 }
 
+
+/**
+ * @brief Displays the current content of the flash-card deck.
+ */
 void CardDeck::displayDeck(void)
 {
 	unsigned int i;
@@ -37,12 +93,10 @@ void CardDeck::displayDeck(void)
 
 
 /**
- * @brief Randomly selects words in the deck to translate. 
+ * @brief Randomly selects words in the deck to translate.
  * 	      If correctly answered, a word is removed from the deck.
- *
- * @param mode Determines the use mode (A->B , B->A or both)
  */
-void CardDeck::flashcardTestDefault(int mode)//(int mode)
+void CardDeck::flashcardTestDefault(void)
 {
 	int mistakes = 0;
 	int randomNmb, randomWay;
@@ -54,9 +108,9 @@ void CardDeck::flashcardTestDefault(int mode)//(int mode)
 	{
 		randomNmb = rand() % wordlistIn.size();
 
-		if(mode == TESTMODE_ATOB || TESTMODE_BTOA)
+		if(CardDeck::operationMode == TESTMODE_ATOB || CardDeck::operationMode == TESTMODE_BTOA)
 		{
-			randomWay = mode;
+			randomWay = CardDeck::operationMode;
 		}
 		else
 		{
@@ -82,12 +136,10 @@ void CardDeck::flashcardTestDefault(int mode)//(int mode)
 }
 
 /**
- * @brief Randomly selects words in the deck to translate (both A->B and B->A). 
+ * @brief Randomly selects words in the deck to translate (both A->B and B->A).
  * 	      If correctly answered, a word is removed from the deck. Otherwise, a word duplicate is added to the deck.
- *
- * @param mode Determines the use mode (A->B , B->A or both)
  */
-void CardDeck::flashcardTestRetry(int mode)
+void CardDeck::flashcardTestRetry(void)
 {
 	int mistakes = 0;
 	int randomNmb, randomWay;
@@ -113,7 +165,7 @@ void CardDeck::flashcardTestRetry(int mode)
 		else
 		{
 			mistakes+=1;
-	
+
 			myWord.push_back(wordlistIn[randomNmb][0]);
 			myWord.push_back(wordlistIn[randomNmb][1]);
 			wordlistIn.push_back(myWord);
@@ -123,4 +175,22 @@ void CardDeck::flashcardTestRetry(int mode)
 	}
 
 	printf(""GREEN"Congratulations, you have completed this deck! You made %d mistakes"NORMAL"\n", mistakes);
+}
+
+
+/**
+ * @brief Changes the mode of operation of the program.
+ * @param mode The operation mode (AtoB, BtoA or both)
+ */
+int CardDeck::changeOperationMode(int mode)
+{
+	if(mode < 0 || mode > TESTMODE_BOTH)
+	{
+		return -1;
+	}
+	else
+	{
+		CardDeck::operationMode = mode;
+		return mode;
+	}
 }
