@@ -30,11 +30,11 @@ mnemobop.o: ./src/mnemobop.cpp
 common.o: ./src/common/common.cpp
 	$(CC) -c $^
 
-graphics.o: ./src/graphics/graphics.cpp
+graphics.o: ./src/graphics/graphics.cpp ./src/graphics/Mnemomenu.ui
 	$(CC) -c $^
 
 clean:
-	rm -f *.o
+	find . -name "*.o" -type f -delete
 
 mrproper:
 	rm -f mnemobop

@@ -142,7 +142,7 @@ int main(int argc, char** argv)
     }
 
     cards.importDeck("lists/TestList.data");
-    cards.displayDeck();
+    //cards.displayDeck();
 
     myGUI.initGraphics(argc, argv);
 
