@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Mnemobop
+Icon=mnemoicon
+StartupNotify=true
+Exec=@bindir@/mnemobop

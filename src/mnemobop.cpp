@@ -12,75 +12,75 @@
  */
 /*std::string _listSelection(void)
 {
-    unsigned int i, iter = 0;
+	unsigned int i, iter = 0;
 
-    DIR *dir;
-    struct dirent *ent;
-    std::string filename;
+	DIR *dir;
+	struct dirent *ent;
+	std::string filename;
 
-    std::vector<string> availableLists;
-    availableLists.clear();
+	std::vector<string> availableLists;
+	availableLists.clear();
 
-    std::ifstream infile;
+	std::ifstream infile;
 
-    if((dir = opendir("./lists/")) != NULL)
-    {
-        // List all files in directory
-        printf(""YELLOW"Available flash-card lists :"NORMAL"\n");
-        while ((ent = readdir (dir)) != NULL)
-        {
-            if(ent->d_name[0] != '.')
-            {
-                availableLists.push_back(string("lists/") + string(ent->d_name));
-            }
-        }
-        closedir (dir);
+	if((dir = opendir("./lists/")) != NULL)
+	{
+		// List all files in directory
+		printf(""YELLOW"Available flash-card lists :"NORMAL"\n");
+		while ((ent = readdir (dir)) != NULL)
+		{
+			if(ent->d_name[0] != '.')
+			{
+				availableLists.push_back(string("lists/") + string(ent->d_name));
+			}
+		}
+		closedir (dir);
 
-        if(availableLists.size() == 0)
-        {
-            printf(""RED"No available flash-card list"NORMAL"\n");
-            return "";
-        }
+		if(availableLists.size() == 0)
+		{
+			printf(""RED"No available flash-card list"NORMAL"\n");
+			return "";
+		}
 
-        for(i=0; i<availableLists.size(); i++)
-        {
-            printf(""YELLOW"\t%d) %s"NORMAL"\n", i+1, availableLists[i].c_str());
-        }
+		for(i=0; i<availableLists.size(); i++)
+		{
+			printf(""YELLOW"\t%d) %s"NORMAL"\n", i+1, availableLists[i].c_str());
+		}
 
-        do
-        {
-            cin >> i;
+		do
+		{
+			cin >> i;
 
-            //3 attemps before error
-            if(iter++ >= 3)
-            {
-                printf(""RED"Failed to load a list"NORMAL"\n");
+		//3 attemps before error
+		if(iter++ >= 3)
+		{
+			printf(""RED"Failed to load a list"NORMAL"\n");
 
-                return "";
-            }
+			return "";
+		}
 
-            if(i>availableLists.size() || i<=0)
-            {
-                printf(""RED"Bad file ID entered : %d "NORMAL"\n", i);
-            }
-            else
-            {
-                return availableLists[i-1];
-                //_fillFlashCard(availableLists[i-1].c_str());
-            }
-        }while(i>availableLists.size() || i<=0);
+		if(i>availableLists.size() || i<=0)
+		{
+			printf(""RED"Bad file ID entered : %d "NORMAL"\n", i);
+		}
+		else
+		{
+			return availableLists[i-1];
+			//_fillFlashCard(availableLists[i-1].c_str());
+		}
+		}while(i>availableLists.size() || i<=0);
 
-    }
-    else
-    {
-        /// Failed to open directory
-        perror(""RED"The following error occurred : "NORMAL"");
-        //printf(""RED"ERROR: Failed to open lists directory%s "NORMAL"\n", availableLists[i-1].c_str());
+	}
+	else
+	{
+		/// Failed to open directory
+		perror(""RED"The following error occurred : "NORMAL"");
+		//printf(""RED"ERROR: Failed to open lists directory%s "NORMAL"\n", availableLists[i-1].c_str());
 
-        return "";
-    }
+		return "";
+	}
 
-    return "";
+	return "";
 }*/
 
 /**
@@ -90,61 +90,59 @@
  */
 /*bool _fillFlashCard(const char* myDeckFile, CardDeck& myCardDeck)
 {
-    std::string myline;
-    std::ifstream infile;
-    vector<std::string> sublines;
+	std::string myline;
+	std::ifstream infile;
+	vector<std::string> sublines;
 
-    infile.open(myDeckFile);
+	infile.open(myDeckFile);
 
-    if(infile.is_open() == true)
-    {
-        printf(""GREEN"List opened : %s "NORMAL"\n", myDeckFile);
+	if(infile.is_open() == true)
+	{
+		printf(""GREEN"List opened : %s "NORMAL"\n", myDeckFile);
 
-        while(getline(infile, myline))
-        {
-            sublines = splitString(myline, ' ');
-            if(sublines.size() != 2)
-            {
-                printf(""RED"Incorrect flash-card list format"NORMAL"\n");
+		while(getline(infile, myline))
+		{
+			sublines = splitString(myline, ' ');
+			if(sublines.size() != 2)
+			{
+				printf(""RED"Incorrect flash-card list format"NORMAL"\n");
 
-                infile.close();
-                return false;
-            }
-            else
-            {
-                /// Fill here FlashDeck filler
-                myCardDeck.addCard(sublines[0], sublines[1]);
-            }
-        }
+				infile.close();
+				return false;
+			}
+			else
+			{
+				/// Fill here FlashDeck filler
+				myCardDeck.addCard(sublines[0], sublines[1]);
+			}
+		}
 
-        printf(""GREEN"New flash-card deck successfully imported"NORMAL"\n");
-    }
-    else
-    {
-        printf(""RED"Failed to open list : %s "NORMAL"\n", myDeckFile);
-    }
+		printf(""GREEN"New flash-card deck successfully imported"NORMAL"\n");
+	}
+	else
+	{
+		printf(""RED"Failed to open list : %s "NORMAL"\n", myDeckFile);
+	}
 
-    infile.close();
+	infile.close();
 
-    return true;
+	return true;
 }*/
 
 
 int main(int argc, char** argv)
 {
-    CardDeck cards;
-    Graphics myGUI;
+	//CardDeck cards;
+	Graphics myGUI;
 
-    if(argc > 1)
-    {
-        printf(""RED"USAGE: %s "NORMAL"\n", argv[0]);
-        return -1;
-    }
+	if(argc > 1)
+	{
+	printf(""RED"USAGE: %s "NORMAL"\n", argv[0]);
+	return -1;
+	}
 
-    cards.importDeck("lists/TestList.data");
-    //cards.displayDeck();
+	//cards.importDeck("lists/TestList.data");
+	//cards.displayDeck();
 
-    myGUI.initGraphics(argc, argv);
-
-    return 0;
+	myGUI.initGraphics(argc, argv);
 }

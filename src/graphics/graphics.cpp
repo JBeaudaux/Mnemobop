@@ -1,6 +1,30 @@
 #include "graphics.h"
 
 
+
+
+
+static void MnemoAppWindowInit(MnemoAppWindow *win)
+{
+	gtk_widget_init_template(GTK_WIDGET(win));
+}
+
+
+static void MnemoAppWindowClassInit(MnemoAppWindowClass *appclass)
+{
+	GBytes* byteStream;
+	GMappedFile* myFileMap;
+	
+	myFileMap = g_mapped_file_new("./src/graphics/Mnemohome.ui", FALSE, NULL);
+	
+	byteStream = g_mapped_file_get_bytes(myFileMap);
+
+	//builder = gtk_builder_new_from_file("./src/graphics/Mnemohome.ui");
+	gtk_widget_class_set_template(GTK_WIDGET_CLASS(appclass), byteStream);
+}
+
+
+
 Graphics::Graphics()
 {
 	//Nothing to do here
@@ -22,8 +46,19 @@ int Graphics::initGraphics(int argNmb, char** argList)
 	return status;
 }
 
+void Graphics::_mnemohome_init(MnemoAppWindow *win)
+{
+	gtk_widget_init_template(GTK_WIDGET (win));
+}
+
 void Graphics::_activate(GtkApplication* app, gpointer user_data)
 {
+	
+	
+	
+	
+	
+	
 	GtkBuilder	*builder;
 	GMenuModel	*app_menu;
 

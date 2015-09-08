@@ -1,6 +1,16 @@
 #include <gtk/gtk.h>
 #include <gio/gio.h>
 
+struct MnemoAppWindow
+{
+	GtkApplicationWindow parent;
+};
+
+struct MnemoAppWindowClass
+{
+	GtkApplicationWindowClass parent_class;
+};
+
 class Graphics
 {
 	public:
@@ -21,4 +31,6 @@ class Graphics
 
 		static void quitActivated(GSimpleAction *action, GVariant *parameter, gpointer appPtr);
 		static void aboutActivated(GSimpleAction *action, GVariant *parameter, gpointer appPtr);
+		
+		static void _mnemohome_init(MnemoAppWindow *win);
 };
