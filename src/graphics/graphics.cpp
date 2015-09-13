@@ -49,34 +49,52 @@ void Graphics::_mnemohome_init(MnemoAppWindow *win)
 void Graphics::_activate(GtkApplication* app, gpointer user_data)
 {
 	GtkWidget*	window;
-	//GdkPixbuf*	icon;
-	GtkWidget*	button;
-	GtkWidget*	halign;
 	
+	GdkPixbuf*	icon;
+	GtkWidget*	button;
+	
+	GtkWidget*	grid;
+	GtkWidget*	entry;
+	
+	
+	//Defines main window properties
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "Mnemobop : Language learning made easy");
-	gtk_window_set_default_size(GTK_WINDOW(window), 600, 200);
+	//gtk_window_set_default_size(GTK_WINDOW(window), 600, 200);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_container_set_border_width(GTK_CONTAINER(window), 15);
 	
 	icon = create_pixbuf("./src/graphics/Blueprint-logo.png");  
 	gtk_window_set_icon(GTK_WINDOW(window), icon);
-  
-	button = gtk_button_new_with_mnemonic("_Button");
-	gtk_widget_set_tooltip_text(button, "Button widget");
-	g_signal_connect(button, "clicked", G_CALLBACK(Graphics::_print_hello), NULL);  
 	
-	halign = gtk_alignment_new(0, 0, 0, 0);
-	gtk_container_add(GTK_CONTAINER(halign), button);
-	gtk_container_add(GTK_CONTAINER(window), halign);
+	//Build the central window
+	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(window), grid);
+
+	entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(entry), "Word 1");
+	gtk_entry_set_alignment(GTK_ENTRY(entry), 0.5);
+	gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
+	gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 1, 1);
+
+	entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(entry), "Word 2");
+	gtk_entry_set_alignment(GTK_ENTRY(entry), 0.5);
+	gtk_editable_set_editable(GTK_EDITABLE(entry), TRUE);
+	gtk_grid_attach(GTK_GRID(grid), entry, 1, 0, 1, 1);
+
+
+	button = gtk_button_new_with_label("Check");
+	//g_signal_connect(button, "clicked", G_CALLBACK(&_displayAbout), NULL);
+	gtk_grid_attach(GTK_GRID(grid), button, 0, 1, 2, 1);
 	
 	gtk_widget_show_all(window);
   
 	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);  
  
 	gtk_main();
-	
-	
+		
+		
 	/*
 	GtkBuilder	*builder;
 	GMenuModel	*app_menu;

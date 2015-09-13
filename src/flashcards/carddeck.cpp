@@ -91,6 +91,32 @@ void CardDeck::displayDeck(void)
 	}
 }
 
+//Returns next word
+std::string CardDeck::getWord(void)
+{
+	int randomNmb, randomWay;
+	
+	srand(time(NULL));
+	
+	if(wordlistIn.size() > 0)
+	{
+		randomNmb = rand() % wordlistIn.size();
+		
+		if(CardDeck::operationMode == TESTMODE_ATOB || CardDeck::operationMode == TESTMODE_BTOA)
+		{
+			randomWay = CardDeck::operationMode;
+		}
+		else
+		{
+			randomWay = rand() % 2;
+		}
+		
+		return wordlistIn[randomNmb][randomWay];
+	}
+	
+	return "You are done";
+}
+
 
 /**
  * @brief Randomly selects words in the deck to translate.

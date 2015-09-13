@@ -20,6 +20,8 @@ class CardDeck
 		void flashcardTestDefault(void);
 		void flashcardTestRetry(void);
 		int changeOperationMode(int mode);
+		
+		std::string getWord(void);
 
 	private:
 		int operationMode;
