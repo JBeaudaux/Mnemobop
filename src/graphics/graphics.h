@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include <gio/gio.h>
 
+//http://zetcode.com/gui/gtk2/
+
 struct MnemoAppWindow
 {
 	GtkApplicationWindow parent;
@@ -23,6 +25,7 @@ class Graphics
 
 	private:
 		//GMenuModel *myMenuModel;
+		static GdkPixbuf* create_pixbuf(const gchar * filename);
 
 		static void _activate (GtkApplication* app, gpointer user_data);
 		static void _print_hello (GtkWidget *widget, gpointer data);

@@ -2,29 +2,6 @@
 
 
 
-
-
-static void MnemoAppWindowInit(MnemoAppWindow *win)
-{
-	gtk_widget_init_template(GTK_WIDGET(win));
-}
-
-
-static void MnemoAppWindowClassInit(MnemoAppWindowClass *appclass)
-{
-	GBytes* byteStream;
-	GMappedFile* myFileMap;
-	
-	myFileMap = g_mapped_file_new("./src/graphics/Mnemohome.ui", FALSE, NULL);
-	
-	byteStream = g_mapped_file_get_bytes(myFileMap);
-
-	//builder = gtk_builder_new_from_file("./src/graphics/Mnemohome.ui");
-	gtk_widget_class_set_template(GTK_WIDGET_CLASS(appclass), byteStream);
-}
-
-
-
 Graphics::Graphics()
 {
 	//Nothing to do here
@@ -37,6 +14,9 @@ int Graphics::initGraphics(int argNmb, char** argList)
 	int status;
 
 	//gtk_init(&argNmb, &argList);
+	
+	printf("GTK+ version: %d.%d.%d\n", gtk_major_version, gtk_minor_version, gtk_micro_version);
+	printf("Glib version: %d.%d.%d\n", glib_major_version, glib_minor_version, glib_micro_version);
 
 	app = gtk_application_new("com.github.username.JBeaudaux.mnemobop", G_APPLICATION_FLAGS_NONE);
 	g_signal_connect(app, "activate", G_CALLBACK(&_activate), NULL);
@@ -46,6 +26,21 @@ int Graphics::initGraphics(int argNmb, char** argList)
 	return status;
 }
 
+GdkPixbuf* Graphics::create_pixbuf(const gchar * filename)
+{
+	GdkPixbuf* pixbuf;
+	GError* error = NULL;
+   
+	pixbuf = gdk_pixbuf_new_from_file(filename, &error);
+	if(!pixbuf)
+	{
+		fprintf(stderr, "%s\n", error->message);
+		g_error_free(error);
+	}
+
+	return pixbuf;
+}
+
 void Graphics::_mnemohome_init(MnemoAppWindow *win)
 {
 	gtk_widget_init_template(GTK_WIDGET (win));
@@ -53,19 +48,44 @@ void Graphics::_mnemohome_init(MnemoAppWindow *win)
 
 void Graphics::_activate(GtkApplication* app, gpointer user_data)
 {
+	GtkWidget*	window;
+	//GdkPixbuf*	icon;
+	GtkWidget*	button;
+	GtkWidget*	halign;
+	
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(window), "Mnemobop : Language learning made easy");
+	gtk_window_set_default_size(GTK_WINDOW(window), 600, 200);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	gtk_container_set_border_width(GTK_CONTAINER(window), 15);
+	
+	icon = create_pixbuf("./src/graphics/Blueprint-logo.png");  
+	gtk_window_set_icon(GTK_WINDOW(window), icon);
+  
+	button = gtk_button_new_with_mnemonic("_Button");
+	gtk_widget_set_tooltip_text(button, "Button widget");
+	g_signal_connect(button, "clicked", G_CALLBACK(Graphics::_print_hello), NULL);  
+	
+	halign = gtk_alignment_new(0, 0, 0, 0);
+	gtk_container_add(GTK_CONTAINER(halign), button);
+	gtk_container_add(GTK_CONTAINER(window), halign);
+	
+	gtk_widget_show_all(window);
+  
+	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);  
+ 
+	gtk_main();
 	
 	
-	
-	
-	
-	
+	/*
 	GtkBuilder	*builder;
 	GMenuModel	*app_menu;
 
 	GtkWidget	*window;
 	GtkWidget	*grid;
 	GtkWidget	*button;
-	GtkWidget	*entry;
+	GtkWidget	*buttonBox;
+	//GtkWidget	*entry;
 
 	static GActionEntry app_entries[] =
 	{
@@ -93,8 +113,33 @@ void Graphics::_activate(GtkApplication* app, gpointer user_data)
 	app_menu = G_MENU_MODEL(gtk_builder_get_object(builder, "menufields"));
 	gtk_application_set_menubar(GTK_APPLICATION(app), app_menu);
 	g_object_unref(builder);
-
+	
+	
 	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(window), grid);
+	
+	
+	buttonBox = gtk_button_box_new(GTK_ORIENTATION_VERTICAL);
+	gtk_button_box_set_layout(GTK_BUTTON_BOX(buttonBox), GTK_BUTTONBOX_START);
+	
+	button = gtk_button_new_with_label("Lesson");*/
+	//buttonBox.add(button);
+	
+	
+	/*button = gtk_button_new_with_label("Lesson");
+	//g_signal_connect(button, "clicked", G_CALLBACK(&_displayAbout), NULL);
+	gtk_grid_attach(GTK_GRID(grid), button, 0, 0, 1, 1);
+	
+	button = gtk_button_new_with_label("Flashcards");
+	//g_signal_connect(button, "clicked", G_CALLBACK(&_displayAbout), NULL);
+	gtk_grid_attach(GTK_GRID(grid), button, 2, 0, 1, 1);
+	
+	button = gtk_button_new_with_label("Grammar");
+	//g_signal_connect(button, "clicked", G_CALLBACK(&_displayAbout), NULL);
+	gtk_grid_attach(GTK_GRID(grid), button, 3, 0, 3, 3);*/
+	
+
+	/*grid = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
 	entry = gtk_entry_new();
@@ -112,9 +157,9 @@ void Graphics::_activate(GtkApplication* app, gpointer user_data)
 
 	button = gtk_button_new_with_label("Check !");
 	//g_signal_connect(button, "clicked", G_CALLBACK(&_displayAbout), NULL);
-	gtk_grid_attach(GTK_GRID(grid), button, 0, 1, 2, 1);
+	gtk_grid_attach(GTK_GRID(grid), button, 0, 1, 2, 1);*/
 
-	gtk_widget_show_all(window);
+	//gtk_widget_show_all(window);
 }
 
 void Graphics::preferences_activated(GSimpleAction *action, GVariant* parameter, gpointer app)
