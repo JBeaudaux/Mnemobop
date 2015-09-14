@@ -139,26 +139,9 @@
 		
 };*/
 
-
-GdkPixbuf* create_pixbuf(const gchar * filename)
-{
-	GdkPixbuf* pixbuf;
-	GError* error = NULL;
-   
-	pixbuf = gdk_pixbuf_new_from_file(filename, &error);
-	if(!pixbuf)
-	{
-		fprintf(stderr, "%s\n", error->message);
-		g_error_free(error);
-	}
-
-	return pixbuf;
-}
-
-
 int main(int argc, char** argv)
 {
-	GtkWidget*	window;
+	/*GtkWidget*	window;
 	
 	GdkPixbuf*	icon;
 	GtkWidget*	button;
@@ -167,10 +150,13 @@ int main(int argc, char** argv)
 	GtkWidget*	word1;
 	GtkWidget*	word2;
 	
-	CardDeck	cards;
+	CardDeck	cards;*/
+
+	Graphics myGUI;
+
+	myGUI.initGraphics(argc, argv);
 	
-	
-	gtk_init(&argc, &argv);
+	/*gtk_init(&argc, &argv);
 
 	printf("GTK+ version: %d.%d.%d\n", gtk_major_version, gtk_minor_version, gtk_micro_version);
 	printf("Glib version: %d.%d.%d\n", glib_major_version, glib_minor_version, glib_micro_version);    
@@ -215,5 +201,5 @@ int main(int argc, char** argv)
   
 	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);  
  
-	gtk_main();
+	gtk_main();*/
 }

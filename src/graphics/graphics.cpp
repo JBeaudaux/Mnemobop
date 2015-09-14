@@ -1,6 +1,12 @@
 #include "graphics.h"
 
 
+//Declaration of class members
+CardDeck Graphics::myDeck;
+
+GtkWidget*	Graphics::entryWord1;
+GtkWidget*	Graphics::entryWord2;
+GtkWidget*	Graphics::resultLabel;
 
 Graphics::Graphics()
 {
@@ -30,7 +36,7 @@ GdkPixbuf* Graphics::create_pixbuf(const gchar * filename)
 {
 	GdkPixbuf* pixbuf;
 	GError* error = NULL;
-   
+	
 	pixbuf = gdk_pixbuf_new_from_file(filename, &error);
 	if(!pixbuf)
 	{
@@ -54,7 +60,10 @@ void Graphics::_activate(GtkApplication* app, gpointer user_data)
 	GtkWidget*	button;
 	
 	GtkWidget*	grid;
-	GtkWidget*	entry;
+
+	//Load flashcards deck
+	myDeck.importDeck("lists/TestList.data");
+	myDeck.displayDeck();
 	
 	
 	//Defines main window properties
@@ -71,22 +80,25 @@ void Graphics::_activate(GtkApplication* app, gpointer user_data)
 	grid = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
-	entry = gtk_entry_new();
-	gtk_entry_set_text(GTK_ENTRY(entry), "Word 1");
-	gtk_entry_set_alignment(GTK_ENTRY(entry), 0.5);
-	gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
-	gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 1, 1);
+	entryWord1 = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(entryWord1), myDeck.getWord().c_str());
+	gtk_entry_set_alignment(GTK_ENTRY(entryWord1), 0.5);
+	gtk_editable_set_editable(GTK_EDITABLE(entryWord1), FALSE);
+	gtk_grid_attach(GTK_GRID(grid), entryWord1, 0, 0, 1, 1);
 
-	entry = gtk_entry_new();
-	gtk_entry_set_text(GTK_ENTRY(entry), "Word 2");
-	gtk_entry_set_alignment(GTK_ENTRY(entry), 0.5);
-	gtk_editable_set_editable(GTK_EDITABLE(entry), TRUE);
-	gtk_grid_attach(GTK_GRID(grid), entry, 1, 0, 1, 1);
+	entryWord2 = gtk_entry_new();
+	//gtk_entry_set_text(GTK_ENTRY(entryWord2), "Word 2");
+	gtk_entry_set_alignment(GTK_ENTRY(entryWord2), 0.5);
+	gtk_editable_set_editable(GTK_EDITABLE(entryWord2), TRUE);
+	gtk_grid_attach(GTK_GRID(grid), entryWord2, 1, 0, 1, 1);
 
 
 	button = gtk_button_new_with_label("Check");
-	//g_signal_connect(button, "clicked", G_CALLBACK(&_displayAbout), NULL);
+	g_signal_connect(button, "clicked", G_CALLBACK(&checkWord), NULL);
 	gtk_grid_attach(GTK_GRID(grid), button, 0, 1, 2, 1);
+
+	resultLabel = gtk_label_new("Find translation");
+	gtk_grid_attach(GTK_GRID(grid), resultLabel, 0, 2, 2, 1);
 	
 	gtk_widget_show_all(window);
   
@@ -179,6 +191,46 @@ void Graphics::_activate(GtkApplication* app, gpointer user_data)
 
 	//gtk_widget_show_all(window);
 }
+
+void Graphics::checkWord(GtkWidget *widget, gpointer data)
+{
+	const gchar* buffer;
+	buffer = gtk_entry_get_text(GTK_ENTRY(entryWord2));
+
+	if(strcmp(buffer, myDeck.getAnswer().c_str()) == 0)
+	{
+		//printf("perfect!\n");
+		gtk_label_set_text(GTK_LABEL(resultLabel), "Correct :-)");
+		myDeck.removeFromDeck();
+	}
+	else
+	{
+		//printf("snif\n");
+		gtk_label_set_text(GTK_LABEL(resultLabel), "Incorrect result :-(");
+		myDeck.duplicateInDeck();
+	}
+
+	while( gtk_events_pending() )
+	{
+    	gtk_main_iteration();
+    }
+
+	//sleep(1);
+
+    if(myDeck.remainingWords() > 0)
+    {
+		gtk_entry_set_text(GTK_ENTRY(entryWord1), myDeck.getWord().c_str());
+		gtk_entry_set_text(GTK_ENTRY(entryWord2), "");
+		//gtk_label_set_text(GTK_LABEL(resultLabel), "Find translation");
+    }
+    else
+    {
+    	gtk_entry_set_text(GTK_ENTRY(entryWord1), "");
+		gtk_entry_set_text(GTK_ENTRY(entryWord2), "");
+    	gtk_label_set_text(GTK_LABEL(resultLabel), "Congratulation, you finished the deck!");
+    }
+}
+
 
 void Graphics::preferences_activated(GSimpleAction *action, GVariant* parameter, gpointer app)
 {

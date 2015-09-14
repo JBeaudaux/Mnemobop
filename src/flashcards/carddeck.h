@@ -22,9 +22,17 @@ class CardDeck
 		int changeOperationMode(int mode);
 		
 		std::string getWord(void);
+		std::string getAnswer(void);
+		void removeFromDeck(void);
+		void duplicateInDeck(void);
+		int remainingWords(void);
 
 	private:
 		int operationMode;
+
+		static int questionID;
+		static int wayID;
+
 		std::vector<std::vector<string> > wordlistIn;
 
 		void _addCard(std::string myWordIn, std::string myWordOut);

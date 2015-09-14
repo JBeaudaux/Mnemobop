@@ -1,5 +1,13 @@
 #include "carddeck.h"
 
+
+
+int CardDeck::questionID;
+int CardDeck::wayID;
+
+
+
+
 CardDeck::CardDeck(std::vector<std::string> myDeck)
 {
 	CardDeck::operationMode = TESTMODE_BOTH;
@@ -93,30 +101,52 @@ void CardDeck::displayDeck(void)
 
 //Returns next word
 std::string CardDeck::getWord(void)
-{
-	int randomNmb, randomWay;
-	
+{	
 	srand(time(NULL));
 	
 	if(wordlistIn.size() > 0)
 	{
-		randomNmb = rand() % wordlistIn.size();
+		questionID = rand() % wordlistIn.size();
 		
 		if(CardDeck::operationMode == TESTMODE_ATOB || CardDeck::operationMode == TESTMODE_BTOA)
 		{
-			randomWay = CardDeck::operationMode;
+			wayID = CardDeck::operationMode;
 		}
 		else
 		{
-			randomWay = rand() % 2;
+			wayID = rand() % 2;
 		}
 		
-		return wordlistIn[randomNmb][randomWay];
+		return wordlistIn[questionID][wayID];
 	}
 	
-	return "You are done";
+	return " ";
 }
 
+
+std::string CardDeck::getAnswer(void)
+{
+	return wordlistIn[questionID][(wayID+1)%2];
+}
+
+void CardDeck::removeFromDeck(void)
+{
+	wordlistIn.erase(wordlistIn.begin() + questionID);
+}
+
+void CardDeck::duplicateInDeck(void)
+{
+	std::vector<string> myWord;
+
+	myWord.push_back(wordlistIn[questionID][0]);
+	myWord.push_back(wordlistIn[questionID][1]);
+	wordlistIn.push_back(myWord);
+}
+
+int CardDeck::remainingWords(void)
+{
+	return wordlistIn.size();
+}
 
 /**
  * @brief Randomly selects words in the deck to translate.
